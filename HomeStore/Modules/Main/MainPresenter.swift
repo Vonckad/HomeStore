@@ -13,7 +13,7 @@
 import UIKit
 
 protocol MainPresentationLogic {
-    func presentSomething(response: Main.Something.Response.ResponseType)
+    func presentResponse(response: Main.Something.Response.ResponseType)
 }
 
 class MainPresenter: MainPresentationLogic {
@@ -21,7 +21,28 @@ class MainPresenter: MainPresentationLogic {
   
   // MARK: Do something
   
-    func presentSomething(response: Main.Something.Response.ResponseType) {
-      viewController?.displaySomething(viewModel: .showData)
+    private func addCategoty() -> [CategoryModel] {
+        var category: [CategoryModel] = []
+        category.append(.init(title: "Phones", image: UIImage(named: "Phones") ?? UIImage()))
+        category.append(.init(title: "Computer", image: UIImage(named: "Computer") ?? UIImage()))
+        category.append(.init(title: "Health", image: UIImage(named: "Health") ?? UIImage()))
+        category.append(.init(title: "Books", image: UIImage(named: "Books") ?? UIImage()))
+        category.append(.init(title: "", image: UIImage(named: "") ?? UIImage()))
+        return category
+    }
+    
+    private func parseData(_ data: Data) -> [HotSalesModel] {
+        guard let mainData: MaimModel = try? JSONDecoder().decode(MaimModel.self, from: data) else { return [] }
+        return mainData.best_seller
+    }
+    
+    func presentResponse(response: Main.Something.Response.ResponseType) {
+        switch response {
+        case .loaded(let data):
+            viewController?.display(viewModel: .showData(category: addCategoty(), hotSales: parseData(data)))
+        }
+//        var hotSales: [HotSalesModel] = []
+//        hotSales.append(.init(title: "Iphone 12", description: "Súper. Mega. Rápido.", image: UIImage(named: "HotSales") ?? UIImage()))
+//        viewController?.display(viewModel: .showData(category: category, hotSales: hotSales))
   }
 }

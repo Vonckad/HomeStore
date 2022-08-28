@@ -20,6 +20,13 @@
 		C91D24CA28B3A39A00997812 /* MainModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = C91D24C428B3A39A00997812 /* MainModels.swift */; };
 		C91D24CB28B3A39A00997812 /* MainViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C91D24C528B3A39A00997812 /* MainViewController.swift */; };
 		C91D24CC28B3A39A00997812 /* MainInteractor.swift in Sources */ = {isa = PBXBuildFile; fileRef = C91D24C628B3A39A00997812 /* MainInteractor.swift */; };
+		C91D24D428B3CA7300997812 /* UIColorExt.swift in Sources */ = {isa = PBXBuildFile; fileRef = C91D24D228B3CA7300997812 /* UIColorExt.swift */; };
+		C958AD6128BA0AC900296BCD /* TitleSupplementaryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C958AD6028BA0AC900296BCD /* TitleSupplementaryView.swift */; };
+		C958AD6328BA1CCB00296BCD /* HotSalesViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = C958AD6228BA1CCA00296BCD /* HotSalesViewCell.swift */; };
+		C958AD6628BA5D1100296BCD /* NetworkLayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = C958AD6528BA5D1100296BCD /* NetworkLayer.swift */; };
+		C9AA867928BA050800D7E11E /* CategoryCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9AA867828BA050800D7E11E /* CategoryCollectionViewCell.swift */; };
+		C9AA867C28BA08AA00D7E11E /* CategoryModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9AA867B28BA08AA00D7E11E /* CategoryModel.swift */; };
+		C9AA867E28BA08F500D7E11E /* MaimModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9AA867D28BA08F500D7E11E /* MaimModel.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -57,6 +64,13 @@
 		C91D24C428B3A39A00997812 /* MainModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainModels.swift; sourceTree = "<group>"; };
 		C91D24C528B3A39A00997812 /* MainViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainViewController.swift; sourceTree = "<group>"; };
 		C91D24C628B3A39A00997812 /* MainInteractor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainInteractor.swift; sourceTree = "<group>"; };
+		C91D24D228B3CA7300997812 /* UIColorExt.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UIColorExt.swift; sourceTree = "<group>"; };
+		C958AD6028BA0AC900296BCD /* TitleSupplementaryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TitleSupplementaryView.swift; sourceTree = "<group>"; };
+		C958AD6228BA1CCA00296BCD /* HotSalesViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HotSalesViewCell.swift; sourceTree = "<group>"; };
+		C958AD6528BA5D1100296BCD /* NetworkLayer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkLayer.swift; sourceTree = "<group>"; };
+		C9AA867828BA050800D7E11E /* CategoryCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategoryCollectionViewCell.swift; sourceTree = "<group>"; };
+		C9AA867B28BA08AA00D7E11E /* CategoryModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategoryModel.swift; sourceTree = "<group>"; };
+		C9AA867D28BA08F500D7E11E /* MaimModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MaimModel.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -107,6 +121,9 @@
 		C9155BC328B3A02A0029BDE4 /* HomeStore */ = {
 			isa = PBXGroup;
 			children = (
+				C9AA867A28BA089E00D7E11E /* Models */,
+				C91D24CF28B3C9C400997812 /* Utils */,
+				C958AD6428BA5CF900296BCD /* Network */,
 				C9155BF528B3A0CC0029BDE4 /* SystemDelegate */,
 				C9155BF428B3A08B0029BDE4 /* Modules */,
 				C9155BCD28B3A02A0029BDE4 /* Assets.xcassets */,
@@ -159,8 +176,44 @@
 				C91D24C428B3A39A00997812 /* MainModels.swift */,
 				C91D24C528B3A39A00997812 /* MainViewController.swift */,
 				C91D24C628B3A39A00997812 /* MainInteractor.swift */,
+				C9AA867728BA04ED00D7E11E /* views */,
 			);
 			path = Main;
+			sourceTree = "<group>";
+		};
+		C91D24CF28B3C9C400997812 /* Utils */ = {
+			isa = PBXGroup;
+			children = (
+				C91D24D228B3CA7300997812 /* UIColorExt.swift */,
+			);
+			path = Utils;
+			sourceTree = "<group>";
+		};
+		C958AD6428BA5CF900296BCD /* Network */ = {
+			isa = PBXGroup;
+			children = (
+				C958AD6528BA5D1100296BCD /* NetworkLayer.swift */,
+			);
+			path = Network;
+			sourceTree = "<group>";
+		};
+		C9AA867728BA04ED00D7E11E /* views */ = {
+			isa = PBXGroup;
+			children = (
+				C9AA867828BA050800D7E11E /* CategoryCollectionViewCell.swift */,
+				C958AD6228BA1CCA00296BCD /* HotSalesViewCell.swift */,
+				C958AD6028BA0AC900296BCD /* TitleSupplementaryView.swift */,
+			);
+			path = views;
+			sourceTree = "<group>";
+		};
+		C9AA867A28BA089E00D7E11E /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				C9AA867B28BA08AA00D7E11E /* CategoryModel.swift */,
+				C9AA867D28BA08F500D7E11E /* MaimModel.swift */,
+			);
+			path = Models;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -295,12 +348,19 @@
 			files = (
 				C9155BC528B3A02A0029BDE4 /* AppDelegate.swift in Sources */,
 				C9155BC728B3A02A0029BDE4 /* SceneDelegate.swift in Sources */,
+				C9AA867C28BA08AA00D7E11E /* CategoryModel.swift in Sources */,
+				C958AD6628BA5D1100296BCD /* NetworkLayer.swift in Sources */,
 				C91D24C828B3A39A00997812 /* MainWorker.swift in Sources */,
 				C91D24C728B3A39A00997812 /* MainPresenter.swift in Sources */,
+				C9AA867E28BA08F500D7E11E /* MaimModel.swift in Sources */,
+				C91D24D428B3CA7300997812 /* UIColorExt.swift in Sources */,
 				C91D24CC28B3A39A00997812 /* MainInteractor.swift in Sources */,
+				C958AD6328BA1CCB00296BCD /* HotSalesViewCell.swift in Sources */,
+				C958AD6128BA0AC900296BCD /* TitleSupplementaryView.swift in Sources */,
 				C91D24CA28B3A39A00997812 /* MainModels.swift in Sources */,
 				C91D24C928B3A39A00997812 /* MainRouter.swift in Sources */,
 				C91D24CB28B3A39A00997812 /* MainViewController.swift in Sources */,
+				C9AA867928BA050800D7E11E /* CategoryCollectionViewCell.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

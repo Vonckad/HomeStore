@@ -13,7 +13,7 @@
 import UIKit
 
 protocol MainDisplayLogic: AnyObject {
-    func displaySomething(viewModel: Main.Something.ViewModel.ViewModelType)
+    func display(viewModel: Main.Something.ViewModel.ViewModelType)
 }
 
 class MainViewController: UIViewController, MainDisplayLogic {
@@ -60,21 +60,183 @@ class MainViewController: UIViewController, MainDisplayLogic {
   
   // MARK: View lifecycle
   
-  override func viewDidLoad() {
-    super.viewDidLoad()
-    doSomething()
-      view.backgroundColor = .blue
-  }
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        view.backgroundColor = UIColor(hexString: "#E5E5E5")
+        configureHierarchy()
+        collectionView.backgroundColor = UIColor(hexString: "#E5E5E5")
+        doReuest()
+    }
   
   // MARK: Do something
   
-  //@IBOutlet weak var nameTextField: UITextField!
-  
-  func doSomething() {
-      interactor?.doSomething(request: .load)
-  }
-  
-    func displaySomething(viewModel: Main.Something.ViewModel.ViewModelType) {
-    //nameTextField.text = viewModel.name
-  }
+    enum SectionKind: Int, CaseIterable {
+        case category, hotSales
+    }
+    
+    var categoryModel: [CategoryModel] = []
+    var hotSalesModel: [HotSalesModel] = []
+    
+    var dataSource: UICollectionViewDiffableDataSource<SectionKind, AnyHashable>! = nil
+    var currentSnapshot: NSDiffableDataSourceSnapshot<SectionKind, AnyHashable>! = nil
+    
+    static let titleElementKind = "title-element-kind"
+    
+    private var collectionView: UICollectionView!
+   
+    func doReuest() {
+        interactor?.doReuest(request: .load)
+    }
+    
+    func display(viewModel: Main.Something.ViewModel.ViewModelType) {
+        
+        switch viewModel {
+        case .showData(category: let category, hotSales: let hotSales):
+            DispatchQueue.main.async {
+                self.categoryModel = category
+                self.hotSalesModel = hotSales
+                self.reloadData()
+            }
+        }
+        //nameTextField.text = viewModel.name
+    }
+}
+
+//MARK: - create collectionView
+extension MainViewController {
+    private func createLayout() -> UICollectionViewLayout {
+        let sectionProvider = { (sectionIndex: Int, layoutEnvironment: NSCollectionLayoutEnvironment) -> NSCollectionLayoutSection? in
+
+            let itemSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0),
+                                                 heightDimension: .fractionalHeight(1.0))
+            let item = NSCollectionLayoutItem(layoutSize: itemSize)
+
+            var groupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(0.35),
+                                                  heightDimension: .absolute(250))
+            switch sectionIndex {
+            case 0:
+                groupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(0.2),
+                                                      heightDimension: .absolute(117))
+            case 1:
+                groupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(0.9),
+                                                      heightDimension: .absolute(200))
+            default:
+                break
+            }
+            
+            
+            let group = NSCollectionLayoutGroup.horizontal(layoutSize: groupSize, subitems: [item])
+            
+            let section = NSCollectionLayoutSection(group: group)
+            section.interGroupSpacing = 20
+            section.contentInsets = NSDirectionalEdgeInsets(top: 0, leading: 20, bottom: 0, trailing: 20)
+            section.orthogonalScrollingBehavior = .paging
+            let titleSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0),
+                                                  heightDimension: .estimated(44))
+            let titleSupplementary = NSCollectionLayoutBoundarySupplementaryItem(
+                layoutSize: titleSize,
+                elementKind: MainViewController.titleElementKind,
+                alignment: .top)
+            section.boundarySupplementaryItems = [titleSupplementary]
+            return section
+        }
+
+        let config = UICollectionViewCompositionalLayoutConfiguration()
+        config.interSectionSpacing = 20
+
+        let layout = UICollectionViewCompositionalLayout(
+            sectionProvider: sectionProvider, configuration: config)
+        return layout
+    }
+    
+    private func configureHierarchy() {
+        collectionView = UICollectionView(frame: .zero, collectionViewLayout: createLayout())
+        collectionView.translatesAutoresizingMaskIntoConstraints = false
+//        collectionView.backgroundColor = .init(red: 18/255, green: 19/255, blue: 25/255, alpha: 1)
+//        collectionView.delegate = self
+        collectionView.register(CategoryCollectionViewCell.self, forCellWithReuseIdentifier: CategoryCollectionViewCell.reuseIdentifier)
+        collectionView.register(HotSalesViewCell.self, forCellWithReuseIdentifier: HotSalesViewCell.reuseIdentifier)
+        collectionView.register(TitleSupplementaryView.self, forSupplementaryViewOfKind: MainViewController.titleElementKind, withReuseIdentifier: TitleSupplementaryView.reuseIdentifier)
+        
+//        tabView = TabView()
+//        tabView.translatesAutoresizingMaskIntoConstraints = false
+//        tabView.backgroundColor = UIColor.init(red: 198/255, green: 46/255, blue: 54/255, alpha: 1)
+//        tabView.layer.cornerRadius = 32
+//        tabView.clipsToBounds = true
+        
+        view.addSubview(collectionView)
+//        view.addSubview(tabView)
+        
+        NSLayoutConstraint.activate([
+            collectionView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            collectionView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            collectionView.topAnchor.constraint(equalTo: view.topAnchor),
+            collectionView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
+            
+//            tabView.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 32),
+//            tabView.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -32),
+//            tabView.heightAnchor.constraint(equalToConstant: 64),
+//            tabView.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -32)
+            ])
+        
+//        actView = UIActivityIndicatorView(frame: CGRect(x: view.center.x, y: view.center.y, width: 20, height: 20))
+//        actView.startAnimating()
+//        view.addSubview(actView)
+        
+        setupDataSource()
+    }
+    
+    private func setupDataSource() {
+        dataSource = UICollectionViewDiffableDataSource<SectionKind, AnyHashable>(collectionView: collectionView, cellProvider: { (collectionView, indexPath, model) -> UICollectionViewCell? in
+            let section = SectionKind(rawValue: indexPath.section)!
+            switch section {
+            case .category:
+               let cell = collectionView.dequeueReusableCell(withReuseIdentifier: CategoryCollectionViewCell.reuseIdentifier, for: indexPath) as! CategoryCollectionViewCell
+
+                let dat = model as! CategoryModel
+                cell.addData(title: dat.title, description: "", image: dat.image)
+                return cell
+
+            case .hotSales:
+               let cell = collectionView.dequeueReusableCell(withReuseIdentifier: HotSalesViewCell.reuseIdentifier, for: indexPath) as! HotSalesViewCell
+                let dat = model as! HotSalesModel
+                cell.addData(title: dat.title, description: dat.picture)//, image: dat.image)
+                return cell
+            }
+        })
+        
+        dataSource.supplementaryViewProvider = { (collectionView, kind, index) in
+            let supplementary = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: TitleSupplementaryView.reuseIdentifier, for: index) as! TitleSupplementaryView
+            
+            let section = SectionKind(rawValue: index.section)!
+            
+            switch section {
+            case .category:
+                supplementary.label.text = "Select Category"
+                return supplementary
+            case .hotSales:
+                supplementary.label.text = "Hot sales"
+                return supplementary
+            }
+        }
+    }
+    
+    private func reloadData() {
+        currentSnapshot = NSDiffableDataSourceSnapshot<SectionKind, AnyHashable>()
+        
+        SectionKind.allCases.forEach { (sectionKind) in
+            switch sectionKind {
+            case .hotSales:
+                currentSnapshot.appendSections([.hotSales])
+                currentSnapshot.appendItems(hotSalesModel)
+            case .category:
+                currentSnapshot.appendSections([.category])
+                currentSnapshot.appendItems(categoryModel)
+            }
+        }
+
+        dataSource.apply(currentSnapshot, animatingDifferences: false)
+//        self.actView.stopAnimating()
+//        self.actView.isHidden = true
+    }
 }

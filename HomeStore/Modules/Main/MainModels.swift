@@ -27,13 +27,13 @@ enum Main
         struct Response
         {
             enum ResponseType {
-                case loaded
+                case loaded(_ data: Data)
             }
         }
         struct ViewModel
         {
             enum ViewModelType {
-                case showData
+                case showData(category: [CategoryModel], hotSales: [HotSalesModel])
             }
         }
     }

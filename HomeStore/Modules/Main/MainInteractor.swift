@@ -13,7 +13,7 @@
 import UIKit
 
 protocol MainBusinessLogic {
-    func doSomething(request: Main.Something.Request.RequestType)
+    func doReuest(request: Main.Something.Request.RequestType)
 }
 
 protocol MainDataStore {
@@ -27,10 +27,11 @@ class MainInteractor: MainBusinessLogic, MainDataStore {
   
   // MARK: Do something
   
-    func doSomething(request: Main.Something.Request.RequestType) {
-    worker = MainWorker()
-    worker?.doSomeWork()
-    
-      presenter?.presentSomething(response: .loaded)
+    func doReuest(request: Main.Something.Request.RequestType) {
+//    worker = MainWorker()
+//    worker?.doSomeWork()
+        NetworkLayer.loadAllData(urlString: "https://run.mocky.io/v3/654bd15e-b121-49ba-a588-960956b15175") { [weak self] data in
+            self?.presenter?.presentResponse(response: .loaded(data))
+        }
   }
 }

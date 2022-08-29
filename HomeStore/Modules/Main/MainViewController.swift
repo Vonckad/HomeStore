@@ -71,11 +71,12 @@ class MainViewController: UIViewController, MainDisplayLogic {
   // MARK: Do something
   
     enum SectionKind: Int, CaseIterable {
-        case category, hotSales
+        case category, homeStore, bestSaller
     }
     
-    var categoryModel: [CategoryModel] = []
-    var hotSalesModel: [HotSalesModel] = []
+    private var categoryModel: [CategoryModel] = []
+    private var bestSallerModel: [BestSellerModel] = []
+    private var homeStoreModel: [HomeStoreModel] = []
     
     var dataSource: UICollectionViewDiffableDataSource<SectionKind, AnyHashable>! = nil
     var currentSnapshot: NSDiffableDataSourceSnapshot<SectionKind, AnyHashable>! = nil
@@ -91,14 +92,14 @@ class MainViewController: UIViewController, MainDisplayLogic {
     func display(viewModel: Main.Something.ViewModel.ViewModelType) {
         
         switch viewModel {
-        case .showData(category: let category, hotSales: let hotSales):
+        case .showData(category: let category, bestSaller: let bestSaller, homeStrore: let homeStore):
             DispatchQueue.main.async {
                 self.categoryModel = category
-                self.hotSalesModel = hotSales
+                self.bestSallerModel = bestSaller
+                self.homeStoreModel = homeStore
                 self.reloadData()
             }
         }
-        //nameTextField.text = viewModel.name
     }
 }
 
@@ -110,27 +111,48 @@ extension MainViewController {
             let itemSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0),
                                                  heightDimension: .fractionalHeight(1.0))
             let item = NSCollectionLayoutItem(layoutSize: itemSize)
-
-            var groupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(0.35),
-                                                  heightDimension: .absolute(250))
+            let section: NSCollectionLayoutSection
+            
             switch sectionIndex {
             case 0:
-                groupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(0.2),
+                let groupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(0.2),
                                                       heightDimension: .absolute(117))
+                let group = NSCollectionLayoutGroup.horizontal(layoutSize: groupSize, subitems: [item])
+                section = NSCollectionLayoutSection(group: group)
             case 1:
-                groupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(0.9),
+                let groupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(0.9),
                                                       heightDimension: .absolute(200))
+                let group = NSCollectionLayoutGroup.horizontal(layoutSize: groupSize, subitems: [item])
+                section = NSCollectionLayoutSection(group: group)
+            case 2:
+                let itemSize1 = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0),
+                                                       heightDimension: .fractionalHeight(1.0))
+                let item1 = NSCollectionLayoutItem(layoutSize: itemSize1)
+                let groupSize1 = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0),
+                                                   heightDimension: .absolute(300))
+                let lastGroup = NSCollectionLayoutGroup.horizontal(layoutSize: groupSize1, subitem: item1, count: 2)
+                lastGroup.interItemSpacing = .fixed(14)
+            
+                section = NSCollectionLayoutSection(group: lastGroup)
+                section.interGroupSpacing = 12
+                section.contentInsets = NSDirectionalEdgeInsets(top: 0, leading: 20, bottom: 0, trailing: 20)
+
+                let titleSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0),
+                                                      heightDimension: .estimated(44))
+                let titleSupplementary = NSCollectionLayoutBoundarySupplementaryItem(
+                    layoutSize: titleSize,
+                    elementKind: MainViewController.titleElementKind,
+                    alignment: .topLeading)
+                section.boundarySupplementaryItems = [titleSupplementary]
+                return section
             default:
-                break
+                fatalError()
             }
             
-            
-            let group = NSCollectionLayoutGroup.horizontal(layoutSize: groupSize, subitems: [item])
-            
-            let section = NSCollectionLayoutSection(group: group)
             section.interGroupSpacing = 20
             section.contentInsets = NSDirectionalEdgeInsets(top: 0, leading: 20, bottom: 0, trailing: 20)
             section.orthogonalScrollingBehavior = .paging
+            
             let titleSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0),
                                                   heightDimension: .estimated(44))
             let titleSupplementary = NSCollectionLayoutBoundarySupplementaryItem(
@@ -152,10 +174,10 @@ extension MainViewController {
     private func configureHierarchy() {
         collectionView = UICollectionView(frame: .zero, collectionViewLayout: createLayout())
         collectionView.translatesAutoresizingMaskIntoConstraints = false
-//        collectionView.backgroundColor = .init(red: 18/255, green: 19/255, blue: 25/255, alpha: 1)
 //        collectionView.delegate = self
         collectionView.register(CategoryCollectionViewCell.self, forCellWithReuseIdentifier: CategoryCollectionViewCell.reuseIdentifier)
         collectionView.register(HotSalesViewCell.self, forCellWithReuseIdentifier: HotSalesViewCell.reuseIdentifier)
+        collectionView.register(HomeStoreViewCell.self, forCellWithReuseIdentifier: HomeStoreViewCell.reuseIdentifier)
         collectionView.register(TitleSupplementaryView.self, forSupplementaryViewOfKind: MainViewController.titleElementKind, withReuseIdentifier: TitleSupplementaryView.reuseIdentifier)
         
 //        tabView = TabView()
@@ -192,16 +214,19 @@ extension MainViewController {
             switch section {
             case .category:
                let cell = collectionView.dequeueReusableCell(withReuseIdentifier: CategoryCollectionViewCell.reuseIdentifier, for: indexPath) as! CategoryCollectionViewCell
-
                 let dat = model as! CategoryModel
                 cell.addData(title: dat.title, description: "", image: dat.image)
                 return cell
-
-            case .hotSales:
+            case .bestSaller:
                let cell = collectionView.dequeueReusableCell(withReuseIdentifier: HotSalesViewCell.reuseIdentifier, for: indexPath) as! HotSalesViewCell
-                let dat = model as! HotSalesModel
+                let dat = model as! BestSellerModel
                 cell.addData(title: dat.title, description: dat.picture)//, image: dat.image)
                 return cell
+            case .homeStore:
+                let cell = collectionView.dequeueReusableCell(withReuseIdentifier: HomeStoreViewCell.reuseIdentifier, for: indexPath) as! HomeStoreViewCell
+                 let dat = model as! HomeStoreModel
+                 cell.addData(title: dat.title, description: dat.subtitle)//, image: dat.image)
+                 return cell
             }
         })
         
@@ -214,8 +239,11 @@ extension MainViewController {
             case .category:
                 supplementary.label.text = "Select Category"
                 return supplementary
-            case .hotSales:
+            case .bestSaller:
                 supplementary.label.text = "Hot sales"
+                return supplementary
+            case .homeStore:
+                supplementary.label.text = "Best Seller"
                 return supplementary
             }
         }
@@ -226,12 +254,15 @@ extension MainViewController {
         
         SectionKind.allCases.forEach { (sectionKind) in
             switch sectionKind {
-            case .hotSales:
-                currentSnapshot.appendSections([.hotSales])
-                currentSnapshot.appendItems(hotSalesModel)
+            case .bestSaller:
+                currentSnapshot.appendSections([.bestSaller])
+                currentSnapshot.appendItems(bestSallerModel)
             case .category:
                 currentSnapshot.appendSections([.category])
                 currentSnapshot.appendItems(categoryModel)
+            case .homeStore:
+                currentSnapshot.appendSections([.homeStore])
+                currentSnapshot.appendItems(homeStoreModel)
             }
         }
 

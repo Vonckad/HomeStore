@@ -33,7 +33,7 @@ enum Main
         struct ViewModel
         {
             enum ViewModelType {
-                case showData(category: [CategoryModel], hotSales: [HotSalesModel])
+                case showData(category: [CategoryModel], bestSaller: [BestSellerModel], homeStrore: [HomeStoreModel])
             }
         }
     }

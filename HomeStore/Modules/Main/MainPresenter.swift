@@ -31,18 +31,16 @@ class MainPresenter: MainPresentationLogic {
         return category
     }
     
-    private func parseData(_ data: Data) -> [HotSalesModel] {
-        guard let mainData: MaimModel = try? JSONDecoder().decode(MaimModel.self, from: data) else { return [] }
-        return mainData.best_seller
+    private func parseData(_ data: Data) -> MaimModel? {
+        guard let mainData: MaimModel = try? JSONDecoder().decode(MaimModel.self, from: data) else { return nil}
+        return mainData
     }
     
     func presentResponse(response: Main.Something.Response.ResponseType) {
         switch response {
         case .loaded(let data):
-            viewController?.display(viewModel: .showData(category: addCategoty(), hotSales: parseData(data)))
+            guard let model = parseData(data) else { return }
+            viewController?.display(viewModel: .showData(category: addCategoty(), bestSaller: model.best_seller, homeStrore: model.home_store))
         }
-//        var hotSales: [HotSalesModel] = []
-//        hotSales.append(.init(title: "Iphone 12", description: "Súper. Mega. Rápido.", image: UIImage(named: "HotSales") ?? UIImage()))
-//        viewController?.display(viewModel: .showData(category: category, hotSales: hotSales))
   }
 }

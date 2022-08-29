@@ -1,17 +1,17 @@
 //
-//  HotSalesViewCell.swift
+//  HomeStoreViewCell.swift
 //  HomeStore
 //
-//  Created by Vlad Ralovich on 27.08.2022.
+//  Created by Vlad Ralovich on 28.08.2022.
 //
 
 import Foundation
 
 import UIKit
 
-class HotSalesViewCell: UICollectionViewCell{
+class HomeStoreViewCell: UICollectionViewCell{
     
-    static let reuseIdentifier = "hot-cell-reuse-identifier"
+    static let reuseIdentifier = "home-cell-reuse-identifier"
     let imageView = UIImageView()
     let titleLabel = UILabel()
     let categoryLabel = UILabel()
@@ -33,7 +33,7 @@ class HotSalesViewCell: UICollectionViewCell{
     
 }
 
-extension HotSalesViewCell {
+extension HomeStoreViewCell {
     func configure() {
         imageView.translatesAutoresizingMaskIntoConstraints = false
         titleLabel.translatesAutoresizingMaskIntoConstraints = false

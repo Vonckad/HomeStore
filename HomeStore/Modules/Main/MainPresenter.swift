@@ -27,7 +27,7 @@ class MainPresenter: MainPresentationLogic {
         category.append(.init(title: "Computer", image: UIImage(named: "Computer") ?? UIImage()))
         category.append(.init(title: "Health", image: UIImage(named: "Health") ?? UIImage()))
         category.append(.init(title: "Books", image: UIImage(named: "Books") ?? UIImage()))
-        category.append(.init(title: "", image: UIImage(named: "") ?? UIImage()))
+        category.append(.init(title: "Other", image: UIImage(named: "") ?? UIImage()))
         return category
     }
     

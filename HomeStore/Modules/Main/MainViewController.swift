@@ -11,6 +11,7 @@
 //
 
 import UIKit
+import Kingfisher
 
 protocol MainDisplayLogic: AnyObject {
     func display(viewModel: Main.Something.ViewModel.ViewModelType)
@@ -120,8 +121,8 @@ extension MainViewController {
                 let group = NSCollectionLayoutGroup.horizontal(layoutSize: groupSize, subitems: [item])
                 section = NSCollectionLayoutSection(group: group)
             case 1:
-                let groupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(0.9),
-                                                      heightDimension: .absolute(200))
+                let groupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(0.91),
+                                                      heightDimension: .absolute(182))
                 let group = NSCollectionLayoutGroup.horizontal(layoutSize: groupSize, subitems: [item])
                 section = NSCollectionLayoutSection(group: group)
             case 2:
@@ -129,7 +130,7 @@ extension MainViewController {
                                                        heightDimension: .fractionalHeight(1.0))
                 let item1 = NSCollectionLayoutItem(layoutSize: itemSize1)
                 let groupSize1 = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0),
-                                                   heightDimension: .absolute(300))
+                                                   heightDimension: .absolute(227))
                 let lastGroup = NSCollectionLayoutGroup.horizontal(layoutSize: groupSize1, subitem: item1, count: 2)
                 lastGroup.interItemSpacing = .fixed(14)
             
@@ -175,8 +176,9 @@ extension MainViewController {
         collectionView = UICollectionView(frame: .zero, collectionViewLayout: createLayout())
         collectionView.translatesAutoresizingMaskIntoConstraints = false
 //        collectionView.delegate = self
+        collectionView.showsVerticalScrollIndicator = false
         collectionView.register(CategoryCollectionViewCell.self, forCellWithReuseIdentifier: CategoryCollectionViewCell.reuseIdentifier)
-        collectionView.register(HotSalesViewCell.self, forCellWithReuseIdentifier: HotSalesViewCell.reuseIdentifier)
+        collectionView.register(BestSellerViewCell.self, forCellWithReuseIdentifier: BestSellerViewCell.reuseIdentifier)
         collectionView.register(HomeStoreViewCell.self, forCellWithReuseIdentifier: HomeStoreViewCell.reuseIdentifier)
         collectionView.register(TitleSupplementaryView.self, forSupplementaryViewOfKind: MainViewController.titleElementKind, withReuseIdentifier: TitleSupplementaryView.reuseIdentifier)
         
@@ -218,14 +220,25 @@ extension MainViewController {
                 cell.addData(title: dat.title, description: "", image: dat.image)
                 return cell
             case .bestSaller:
-               let cell = collectionView.dequeueReusableCell(withReuseIdentifier: HotSalesViewCell.reuseIdentifier, for: indexPath) as! HotSalesViewCell
+                let cell = collectionView.dequeueReusableCell(withReuseIdentifier: BestSellerViewCell.reuseIdentifier, for: indexPath) as! BestSellerViewCell
                 let dat = model as! BestSellerModel
-                cell.addData(title: dat.title, description: dat.picture)//, image: dat.image)
+                cell.addData(title: dat.title, price: "\(dat.discount_price)", oldPrice: "\(dat.price_without_discount)")
+                cell.imageView.kf.indicatorType = .activity
+                KF.url(URL(string: dat.picture))
+                    .set(to: cell.imageView)
+                cell.clipsToBounds = true
+                cell.layer.cornerRadius = 10
                 return cell
             case .homeStore:
                 let cell = collectionView.dequeueReusableCell(withReuseIdentifier: HomeStoreViewCell.reuseIdentifier, for: indexPath) as! HomeStoreViewCell
                  let dat = model as! HomeStoreModel
+                 cell.showNewLabel(dat.is_new ?? false)
                  cell.addData(title: dat.title, description: dat.subtitle)//, image: dat.image)
+                cell.imageView.kf.indicatorType = .activity
+                KF.url(URL(string: dat.picture))
+                    .set(to: cell.imageView)
+                cell.clipsToBounds = true
+                cell.layer.cornerRadius = 10
                  return cell
             }
         })
@@ -240,10 +253,10 @@ extension MainViewController {
                 supplementary.label.text = "Select Category"
                 return supplementary
             case .bestSaller:
-                supplementary.label.text = "Hot sales"
+                supplementary.label.text = "Best Seller"
                 return supplementary
             case .homeStore:
-                supplementary.label.text = "Best Seller"
+                supplementary.label.text = "Hot sales"
                 return supplementary
             }
         }

@@ -20,7 +20,7 @@ struct BestSellerModel: Hashable, Decodable {
 }
 
 struct HomeStoreModel: Hashable, Decodable {
-//    let id: Int
-//    let is_new, is_buy: Bool
+    let id: Int
+    let is_new, is_buy: Bool?
     let title, subtitle, picture: String
 }

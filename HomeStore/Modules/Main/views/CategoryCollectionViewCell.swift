@@ -35,7 +35,7 @@ class CategoryCollectionViewCell: UICollectionViewCell{
 extension CategoryCollectionViewCell {
     func configure() {
         backgroundImageView.translatesAutoresizingMaskIntoConstraints = false
-        backgroundImageView.backgroundColor = UIColor(hexString: "#FF6E4E")
+        backgroundImageView.backgroundColor = .white//UIColor(hexString: "#FF6E4E")
         backgroundImageView.layer.cornerRadius = 35.5
         backgroundImageView.tintColor = UIColor(hexString: "#B3B3C3")
         

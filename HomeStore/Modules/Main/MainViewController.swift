@@ -83,7 +83,8 @@ class MainViewController: UIViewController, MainDisplayLogic {
     var currentSnapshot: NSDiffableDataSourceSnapshot<SectionKind, AnyHashable>! = nil
     
     static let titleElementKind = "title-element-kind"
-    
+    static let searchElementKind = "search-element-kind"
+
     private var collectionView: UICollectionView!
    
     func doReuest() {
@@ -116,15 +117,44 @@ extension MainViewController {
             
             switch sectionIndex {
             case 0:
-                let groupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(0.2),
+                let groupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(0.22),
                                                       heightDimension: .absolute(117))
                 let group = NSCollectionLayoutGroup.horizontal(layoutSize: groupSize, subitems: [item])
                 section = NSCollectionLayoutSection(group: group)
+
+                let titleSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0),
+                                                      heightDimension: .estimated(44))
+                let titleSupplementary = NSCollectionLayoutBoundarySupplementaryItem(
+                    layoutSize: titleSize,
+                    elementKind: MainViewController.titleElementKind,
+                    alignment: .top)
+                
+                let footerSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0),
+                                                      heightDimension: .estimated(44))
+                
+                let sectionFooter = NSCollectionLayoutBoundarySupplementaryItem(
+                    layoutSize: footerSize,
+                    elementKind: MainViewController.searchElementKind,
+                    alignment: .bottom)
+                section.boundarySupplementaryItems = [titleSupplementary, sectionFooter]
+                section.orthogonalScrollingBehavior = .continuous
+                section.contentInsets = NSDirectionalEdgeInsets(top: 0, leading: 20, bottom: 0, trailing: 20)
+                return section
+                
             case 1:
                 let groupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(0.91),
                                                       heightDimension: .absolute(182))
                 let group = NSCollectionLayoutGroup.horizontal(layoutSize: groupSize, subitems: [item])
                 section = NSCollectionLayoutSection(group: group)
+                let titleSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0),
+                                                      heightDimension: .estimated(44))
+                let titleSupplementary = NSCollectionLayoutBoundarySupplementaryItem(
+                    layoutSize: titleSize,
+                    elementKind: MainViewController.titleElementKind,
+                    alignment: .top)
+                section.boundarySupplementaryItems = [titleSupplementary]
+                section.contentInsets = NSDirectionalEdgeInsets(top: 0, leading: 20, bottom: 0, trailing: 20)
+                
             case 2:
                 let itemSize1 = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0),
                                                        heightDimension: .fractionalHeight(1.0))
@@ -137,13 +167,12 @@ extension MainViewController {
                 section = NSCollectionLayoutSection(group: lastGroup)
                 section.interGroupSpacing = 12
                 section.contentInsets = NSDirectionalEdgeInsets(top: 0, leading: 20, bottom: 0, trailing: 20)
-
                 let titleSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0),
                                                       heightDimension: .estimated(44))
                 let titleSupplementary = NSCollectionLayoutBoundarySupplementaryItem(
                     layoutSize: titleSize,
                     elementKind: MainViewController.titleElementKind,
-                    alignment: .topLeading)
+                    alignment: .top)
                 section.boundarySupplementaryItems = [titleSupplementary]
                 return section
             default:
@@ -153,14 +182,6 @@ extension MainViewController {
             section.interGroupSpacing = 20
             section.contentInsets = NSDirectionalEdgeInsets(top: 0, leading: 20, bottom: 0, trailing: 20)
             section.orthogonalScrollingBehavior = .paging
-            
-            let titleSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0),
-                                                  heightDimension: .estimated(44))
-            let titleSupplementary = NSCollectionLayoutBoundarySupplementaryItem(
-                layoutSize: titleSize,
-                elementKind: MainViewController.titleElementKind,
-                alignment: .top)
-            section.boundarySupplementaryItems = [titleSupplementary]
             return section
         }
 
@@ -181,6 +202,7 @@ extension MainViewController {
         collectionView.register(BestSellerViewCell.self, forCellWithReuseIdentifier: BestSellerViewCell.reuseIdentifier)
         collectionView.register(HomeStoreViewCell.self, forCellWithReuseIdentifier: HomeStoreViewCell.reuseIdentifier)
         collectionView.register(TitleSupplementaryView.self, forSupplementaryViewOfKind: MainViewController.titleElementKind, withReuseIdentifier: TitleSupplementaryView.reuseIdentifier)
+        collectionView.register(FooterView.self, forSupplementaryViewOfKind: MainViewController.searchElementKind, withReuseIdentifier: FooterView.reuseIdentifier)
         
 //        tabView = TabView()
 //        tabView.translatesAutoresizingMaskIntoConstraints = false
@@ -244,21 +266,33 @@ extension MainViewController {
         })
         
         dataSource.supplementaryViewProvider = { (collectionView, kind, index) in
-            let supplementary = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: TitleSupplementaryView.reuseIdentifier, for: index) as! TitleSupplementaryView
             
+            print("kind = \(kind)")
             let section = SectionKind(rawValue: index.section)!
-            
-            switch section {
-            case .category:
-                supplementary.label.text = "Select Category"
-                return supplementary
-            case .bestSaller:
-                supplementary.label.text = "Best Seller"
-                return supplementary
-            case .homeStore:
-                supplementary.label.text = "Hot sales"
-                return supplementary
+            if kind == MainViewController.titleElementKind {
+                let supplementary = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: TitleSupplementaryView.reuseIdentifier, for: index) as? TitleSupplementaryView
+               
+                switch section {
+                case .category:
+                    supplementary?.label.text = "Select Category"
+                    supplementary?.seeMoreButton.setTitle("view all", for: .normal)
+                    return supplementary
+                case .bestSaller:
+                    supplementary?.label.text = "Best Seller"
+                    supplementary?.seeMoreButton.setTitle("see more", for: .normal)
+                    return supplementary
+                case .homeStore:
+                    supplementary?.label.text = "Hot sales"
+                    supplementary?.seeMoreButton.setTitle("see more", for: .normal)
+                    return supplementary
+                }
+            } else {
+                let footer = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: FooterView.reuseIdentifier, for: index) as? FooterView
+                if section == .category {
+                    return footer
+                }
             }
+            return UICollectionReusableView()
         }
     }
     
@@ -282,5 +316,6 @@ extension MainViewController {
         dataSource.apply(currentSnapshot, animatingDifferences: false)
 //        self.actView.stopAnimating()
 //        self.actView.isHidden = true
+        
     }
 }

@@ -29,6 +29,7 @@
 		C9AA867C28BA08AA00D7E11E /* CategoryModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9AA867B28BA08AA00D7E11E /* CategoryModel.swift */; };
 		C9AA867E28BA08F500D7E11E /* MaimModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9AA867D28BA08F500D7E11E /* MaimModel.swift */; };
 		C9B6787928BCCC0E005ED450 /* Kingfisher in Frameworks */ = {isa = PBXBuildFile; productRef = C9B6787828BCCC0E005ED450 /* Kingfisher */; };
+		C9B6787B28BCD897005ED450 /* FooterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9B6787A28BCD897005ED450 /* FooterView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -74,6 +75,7 @@
 		C9AA867828BA050800D7E11E /* CategoryCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategoryCollectionViewCell.swift; sourceTree = "<group>"; };
 		C9AA867B28BA08AA00D7E11E /* CategoryModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategoryModel.swift; sourceTree = "<group>"; };
 		C9AA867D28BA08F500D7E11E /* MaimModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MaimModel.swift; sourceTree = "<group>"; };
+		C9B6787A28BCD897005ED450 /* FooterView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FooterView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -208,6 +210,7 @@
 				C958AD6728BBC96E00296BCD /* HomeStoreViewCell.swift */,
 				C958AD6228BA1CCA00296BCD /* BestSellerViewCell.swift */,
 				C958AD6028BA0AC900296BCD /* TitleSupplementaryView.swift */,
+				C9B6787A28BCD897005ED450 /* FooterView.swift */,
 			);
 			path = views;
 			sourceTree = "<group>";
@@ -373,6 +376,7 @@
 				C91D24C928B3A39A00997812 /* MainRouter.swift in Sources */,
 				C91D24CB28B3A39A00997812 /* MainViewController.swift in Sources */,
 				C9AA867928BA050800D7E11E /* CategoryCollectionViewCell.swift in Sources */,
+				C9B6787B28BCD897005ED450 /* FooterView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
